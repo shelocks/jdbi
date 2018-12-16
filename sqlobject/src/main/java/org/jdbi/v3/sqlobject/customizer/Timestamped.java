@@ -19,12 +19,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.time.OffsetDateTime;
-
 import org.jdbi.v3.sqlobject.customizer.internal.TimestampedFactory;
 
 /**
  * Binds the named parameter <code>:now</code> or a custom named parameter with
- * the current DateTime as an {@link OffsetDateTime}.
+ * the current DateTime as an {@link OffsetDateTime} by default, or another type if chosen.
  * Common use cases:
  * <pre>
  * <code>
@@ -53,4 +52,20 @@ public @interface Timestamped {
      * @return the parameter name
      */
     String value() default "now";
+
+    /**
+     * The type of datetime class to use. Supported values are:
+     * <ul>
+     *     <li>{@link java.time.LocalDate}</li>
+     *     <li>{@link java.time.LocalTime}</li>
+     *     <li>{@link java.time.LocalDateTime}</li>
+     *     <li>{@link java.time.OffsetDateTime}</li>
+     *     <li>{@link java.time.ZonedDateTime}</li>
+     *     <li>{@link java.time.Instant}</li>
+     *     <li>{@link java.time.OffsetTime}</li>
+     *     <li>{@link java.time.Year}</li>
+     *     <li>{@link java.time.YearMonth}</li>
+     * </ul>
+     */
+    Class<?> type() default OffsetDateTime.class;
 }

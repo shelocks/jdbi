@@ -3360,6 +3360,30 @@ public interface Foo {
 }
 ----
 
+==== @Timestamped
+
+Adding `@Timestamped` to a query will insert the current time
+according to the `Clock` in link:{jdbidocs}/core/Time.html[Time^]
+as a binding.
+This can be quite useful for e.g. created/modified timestamps on entities.
+
+[source,java]
+----
+public interface Foo {
+    @SqlUpdate("insert into foo(id, time) values(1, :now)")
+    @Timestamped
+    void addTimedFoo();
+}
+----
+
+Both the name and type, which default to `now` and `OffsetDateTime`,
+can be changed:
+
+[source,java]
+----
+@Timestamped(value = "time", type = Instant.class)
+----
+
 === Consumer Methods
 
 As a special case, you may provide a `Consumer<T>` argument in addition to other bound parameters.

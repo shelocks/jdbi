@@ -13,6 +13,7 @@
       ParsedSql.named(List<String>) factories.
     - Time config class lets you set a java.time.Clock instance to be used by timing features such
       as @Timestamped and the StatementContext timings.
+    - `type` parameter on @Timestamped that allows you to choose a different timestamp type.
   - New beta API
     - Type qualifiers for binding and mapping. Use annotations to distinguish between different SQL
       data types that map to the same Java type. e.g. VARCHAR, NVARCHAR, and Postgres MACADDR all
