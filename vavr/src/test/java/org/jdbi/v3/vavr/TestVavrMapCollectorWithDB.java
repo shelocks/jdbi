@@ -20,6 +20,10 @@ import io.vavr.collection.List;
 import io.vavr.collection.Map;
 import io.vavr.collection.Multimap;
 import io.vavr.collection.Seq;
+import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.generic.GenericType;
@@ -29,9 +33,6 @@ import org.jdbi.v3.core.rule.H2DatabaseRule;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.Objects;
-import java.util.Optional;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -157,39 +158,11 @@ public class TestVavrMapCollectorWithDB {
        );
     }
 
+    @RequiredArgsConstructor
+    @EqualsAndHashCode
+    @ToString
     public static class User {
         private final int id;
         private final String name;
-
-        public User(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            User user = (User) o;
-            return id == user.id
-                    && Objects.equals(name, user.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, name);
-        }
-
-        @Override
-        public String toString() {
-            return "User{"
-                    + "id=" + id
-                    + ", name='" + name + '\''
-                    + '}';
-        }
     }
 }

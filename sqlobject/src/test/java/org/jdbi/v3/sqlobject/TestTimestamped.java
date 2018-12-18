@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import lombok.Data;
 import org.jdbi.v3.core.mapper.RowMapper;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.core.statement.TimingCollector;
@@ -155,93 +156,17 @@ public class TestTimestamped {
         }
     }
 
-    /**
-     * Person JavaBean for tests
-     */
+    @Data
     public static final class Person {
         private int id;
-
         private String firstName;
-
         private String lastName;
-
         private Timestamp created;
-
         private Timestamp modified;
 
         public Person(String firstName, String lastName) {
             this.firstName = firstName;
             this.lastName = lastName;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public void setFirstName(String firstName) {
-            this.firstName = firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-
-        public void setLastName(String lastName) {
-            this.lastName = lastName;
-        }
-
-        public Timestamp getCreated() {
-            return created;
-        }
-
-        public void setCreated(Timestamp created) {
-            this.created = created;
-        }
-
-        public Timestamp getModified() {
-            return modified;
-        }
-
-        public void setModified(Timestamp modified) {
-            this.modified = modified;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-
-            Person person = (Person) o;
-
-            if (id != person.id) {
-                return false;
-            }
-            if (!firstName.equals(person.firstName)) {
-                return false;
-            }
-            return lastName != null ? lastName.equals(person.lastName) : person.lastName == null;
-        }
-
-        @Override
-        public int hashCode() {
-            int result = id;
-            result = 31 * result + firstName.hashCode();
-            result = 31 * result + lastName.hashCode();
-            result = 31 * result + (created != null ? created.hashCode() : 0);
-            result = 31 * result + (modified != null ? modified.hashCode() : 0);
-            return result;
         }
     }
 }

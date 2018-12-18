@@ -15,6 +15,7 @@ package org.jdbi.v3.sqlobject;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.Something;
@@ -117,12 +118,9 @@ public class BindListNullTest {
         List<Something> get(@BindList(onEmpty = VOID) Iterable<Object> ids);
     }
 
+    @RequiredArgsConstructor
     public static class LoggingParser implements SqlParser {
         private final List<String> log;
-
-        public LoggingParser(List<String> log) {
-            this.log = log;
-        }
 
         @Override
         public ParsedSql parse(String sql, StatementContext ctx) {

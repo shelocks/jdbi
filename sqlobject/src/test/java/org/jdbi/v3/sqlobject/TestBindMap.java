@@ -15,6 +15,7 @@ package org.jdbi.v3.sqlobject;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;
+import lombok.RequiredArgsConstructor;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Something;
 import org.jdbi.v3.core.mapper.SomethingMapper;
@@ -132,12 +133,9 @@ public class TestBindMap {
         dao.update(5, singletonMap(new MapKey("name"), "Jacob"));
     }
 
+    @RequiredArgsConstructor
     public static class MapKey {
         private final String value;
-
-        MapKey(String value) {
-            this.value = value;
-        }
 
         @Override
         public String toString() {

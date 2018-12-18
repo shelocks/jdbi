@@ -18,6 +18,8 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import lombok.Getter;
+import lombok.Setter;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Something;
 import org.jdbi.v3.core.mapper.NoSuchMapperException;
@@ -53,25 +55,11 @@ public class TestRegisteredMappersWork {
         assertThat(worldIsRight).isTrue();
     }
 
+    @Getter
+    @Setter
     public static class Bean {
         private String name;
         private String color;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getColor() {
-            return color;
-        }
-
-        public void setColor(String color) {
-            this.color = color;
-        }
     }
 
     private interface BeanMappingDao extends SqlObject {

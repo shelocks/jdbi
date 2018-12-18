@@ -13,6 +13,7 @@
  */
 package org.jdbi.v3.core.array;
 
+import lombok.Data;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.core.generic.GenericType;
@@ -67,37 +68,12 @@ public class TestCustomArrayType {
         }
     }
 
+    @Data
     static class UserId {
         private final int id;
-
-        UserId(int id) {
-            this.id = id;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            UserId userId = (UserId) o;
-            return id == userId.id;
-        }
-
-        @Override
-        public int hashCode() {
-            return id;
-        }
     }
 
     static class UserIdArrayType implements SqlArrayType<UserId> {
-
         @Override
         public String getTypeName() {
             return "int";
@@ -110,7 +86,6 @@ public class TestCustomArrayType {
     }
 
     static class UserIdColumnMapper implements ColumnMapper<UserId> {
-
         @Override
         public UserId map(ResultSet rs, int col, StatementContext ctx) throws SQLException {
             return new UserId(rs.getInt(col));

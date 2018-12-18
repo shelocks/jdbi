@@ -13,13 +13,13 @@
  */
 package org.jdbi.v3.core.argument;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
-
 import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Types;
-
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.jdbi.v3.core.statement.StatementContext;
 import org.jdbi.v3.core.statement.StatementContextAccess;
 import org.jdbi.v3.core.statement.UnableToCreateStatementException;
@@ -28,6 +28,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
 
 public class TestBeanArguments {
     @Rule
@@ -58,16 +61,10 @@ public class TestBeanArguments {
         verify(stmt).setNull(3, Types.NUMERIC);
     }
 
+    @RequiredArgsConstructor
+    @Getter
     public static class Foo {
         private final BigDecimal foo;
-
-        Foo(BigDecimal foo) {
-            this.foo = foo;
-        }
-
-        public BigDecimal getFoo() {
-            return foo;
-        }
     }
 
     @Test
@@ -115,14 +112,10 @@ public class TestBeanArguments {
             .isInstanceOf(UnableToCreateStatementException.class);
     }
 
+    @Setter
+    @Getter(AccessLevel.PROTECTED)
     public static class NonPublicGetter {
-        @SuppressWarnings("unused")
-        protected String getBar() {
-            return "baz";
-        }
-
-        @SuppressWarnings("unused")
-        public void setBar(String bar) {}
+        private String bar;
     }
 
     @Test
@@ -176,29 +169,16 @@ public class TestBeanArguments {
         verify(stmt).setLong(3, 69);
     }
 
+    @RequiredArgsConstructor
+    @Getter
     public static class FooProperty {
         private final Object foo;
-
-        FooProperty(Object foo) {
-            this.foo = foo;
-        }
-
-        @SuppressWarnings("unused")
-        public Object getFoo() {
-            return foo;
-        }
     }
 
+    @RequiredArgsConstructor
+    @Getter
     public static class IdProperty {
         private final long id;
-
-        IdProperty(long id) {
-            this.id = id;
-        }
-
-        public long getId() {
-            return id;
-        }
     }
 
     @Test

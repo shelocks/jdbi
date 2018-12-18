@@ -13,8 +13,7 @@
  */
 package org.jdbi.v3.sqlobject;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
+import lombok.RequiredArgsConstructor;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.rule.H2DatabaseRule;
 import org.jdbi.v3.sqlobject.customizer.BindMethods;
@@ -23,6 +22,8 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestBindFunctions {
     @Rule
@@ -48,14 +49,10 @@ public class TestBindFunctions {
         assertThat(dao.getName(1)).isEqualTo("Alicia");
     }
 
+    @RequiredArgsConstructor
     public static class FluentSomething {
         private final int id;
         private final String name;
-
-        public FluentSomething(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
 
         public int id() {
             return this.id;

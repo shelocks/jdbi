@@ -13,17 +13,15 @@
  */
 package org.jdbi.v3.sqlobject;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.lang.reflect.Method;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
-
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.argument.AbstractArgumentFactory;
 import org.jdbi.v3.core.argument.Argument;
@@ -38,6 +36,8 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestBindMethods {
 
@@ -153,14 +153,9 @@ public class TestBindMethods {
         }
     }
 
+    @RequiredArgsConstructor
     public static class DatabaseNumberValue<T extends Number> implements DatabaseValue<T> {
-
         private final T value;
-
-        DatabaseNumberValue(final T value) {
-            super();
-            this.value = value;
-        }
 
         @Override
         public T getColumnValue() {
@@ -169,16 +164,14 @@ public class TestBindMethods {
     }
 
     public static final class DatabaseLongValue extends DatabaseNumberValue<Long> {
-
         DatabaseLongValue(final long value) {
-            super(Long.valueOf(value));
+            super(value);
         }
     }
 
     public static final class DatabaseLongValueWithOverride extends DatabaseNumberValue<Long> {
-
         DatabaseLongValueWithOverride(final long value) {
-            super(Long.valueOf(value));
+            super(value);
         }
 
         @Override
@@ -187,42 +180,28 @@ public class TestBindMethods {
         }
     }
 
+    @RequiredArgsConstructor
     public static final class DirectDatabaseLongValue implements DatabaseValue<Long> {
-
         private final long value;
-
-        DirectDatabaseLongValue(final long value) {
-            super();
-            this.value = value;
-        }
 
         @Override
         public Long getColumnValue() {
-            return Long.valueOf(this.value);
+            return this.value;
         }
     }
 
+    @RequiredArgsConstructor
+    @ToString
     public static final class BigIntNumberArgument implements Argument {
-
         private final Number value;
-
-        public BigIntNumberArgument(final Number value) {
-            this.value = value;
-        }
 
         @Override
         public void apply(final int position, final PreparedStatement statement, final StatementContext ctx) throws SQLException {
             statement.setLong(position, this.value.longValue());
         }
-
-        @Override
-        public String toString() {
-            return Objects.toString(this.value);
-        }
     }
 
     public static final class BigIntNumberArgumentFactory extends AbstractArgumentFactory<Number> {
-
         public BigIntNumberArgumentFactory() {
             super(Types.BIGINT);
         }

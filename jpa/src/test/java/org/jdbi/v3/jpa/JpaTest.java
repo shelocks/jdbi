@@ -13,14 +13,17 @@
  */
 package org.jdbi.v3.jpa;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.MappedSuperclass;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.assertj.core.api.AbstractListAssert;
 import org.jdbi.v3.core.qualifier.Reversed;
 import org.jdbi.v3.core.qualifier.ReversedStringArgumentFactory;
@@ -34,6 +37,8 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JpaTest {
     private static final String INSERT_BY_PROPERTY_NAME = "insert into something(id, name) values (:id, :name)";
@@ -54,32 +59,13 @@ public class JpaTest {
     }
 
     @Entity
-    static class EntityThing implements Thing {
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    private static class EntityThing implements Thing {
         private int id;
         private String name;
-
-        EntityThing() {}
-
-        EntityThing(int id, String name) {
-            setId(id);
-            setName(name);
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 
     public interface EntityThingDao {
@@ -106,34 +92,15 @@ public class JpaTest {
     }
 
     @Entity
-    static class FieldThing implements Thing {
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    private static class FieldThing implements Thing {
         @Column
         private int id;
         @Column
         private String name;
-
-        FieldThing() {}
-
-        FieldThing(int id, String name) {
-            setId(id);
-            setName(name);
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 
     public interface FieldThingDao {
@@ -159,34 +126,15 @@ public class JpaTest {
     }
 
     @Entity
-    static class NamedFieldThing implements Thing {
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
+    private static class NamedFieldThing implements Thing {
         @Column(name = "foo")
         private int id;
         @Column(name = "bar")
         private String name;
-
-        NamedFieldThing() {}
-
-        NamedFieldThing(int id, String name) {
-            setId(id);
-            setName(name);
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 
     public interface NamedFieldThingDao {
@@ -213,16 +161,13 @@ public class JpaTest {
     }
 
     @Entity
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
     static class GetterThing implements Thing {
         private int id;
         private String name;
-
-        GetterThing() {}
-
-        GetterThing(int id, String name) {
-            setId(id);
-            setName(name);
-        }
 
         @Column
         public int getId() {
@@ -232,14 +177,6 @@ public class JpaTest {
         @Column
         public String getName() {
             return name;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public void setName(String name) {
-            this.name = name;
         }
     }
 
@@ -267,16 +204,13 @@ public class JpaTest {
     }
 
     @Entity
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
     static class NamedGetterThing implements Thing {
         private int id;
         private String name;
-
-        NamedGetterThing() {}
-
-        NamedGetterThing(int id, String name) {
-            setId(id);
-            setName(name);
-        }
 
         @Column(name = "foo")
         public int getId() {
@@ -286,14 +220,6 @@ public class JpaTest {
         @Column(name = "bar")
         public String getName() {
             return name;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public void setName(String name) {
-            this.name = name;
         }
     }
 
@@ -321,24 +247,13 @@ public class JpaTest {
     }
 
     @Entity
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
     static class SetterThing implements Thing {
         private int id;
         private String name;
-
-        SetterThing() {}
-
-        SetterThing(int id, String name) {
-            setId(id);
-            setName(name);
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
 
         @Column
         public void setId(int id) {
@@ -375,24 +290,13 @@ public class JpaTest {
     }
 
     @Entity
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Getter
+    @Setter
     static class NamedSetterThing implements Thing {
         private int id;
         private String name;
-
-        NamedSetterThing() {}
-
-        NamedSetterThing(int id, String name) {
-            setId(id);
-            setName(name);
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
 
         @Column(name = "foo")
         public void setId(int id) {
@@ -428,35 +332,22 @@ public class JpaTest {
     }
 
     @MappedSuperclass
+    @Getter
+    @Setter
     static class MappedSuperclassThing {
         private int id;
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
     }
 
     @Entity
+    @NoArgsConstructor
+    @Getter
+    @Setter
     static class ExtendsMappedSuperclassThing extends MappedSuperclassThing implements Thing {
-        ExtendsMappedSuperclassThing() {}
+        private String name;
 
         ExtendsMappedSuperclassThing(int id, String name) {
             setId(id);
             setName(name);
-        }
-
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
         }
     }
 
@@ -483,17 +374,12 @@ public class JpaTest {
     }
 
     @Entity
+    @NoArgsConstructor
+    @AllArgsConstructor
     static class AnnotationPriorityThing implements Thing {
         @Column(name = ID_ANNOTATION_NAME)
         private int id;
         private String name;
-
-        AnnotationPriorityThing() {}
-
-        AnnotationPriorityThing(int id, String name) {
-            setId(id);
-            setName(name);
-        }
 
         @Column(name = "ignored")
         public int getId() {
@@ -584,36 +470,22 @@ public class JpaTest {
     }
 
     @MappedSuperclass
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     static class OverriddenSuperclassThing implements Thing {
         @Column(name = "foo")
         private int id;
         @Column(name = "bar")
         private String name;
-
-        public int getId() {
-            return id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 
     @Entity
+    @NoArgsConstructor
     static class OverridingSubclassThing extends OverriddenSuperclassThing {
-        OverridingSubclassThing() {}
-
         OverridingSubclassThing(int id, String name) {
-            setId(id);
-            setName(name);
+            super(id, name);
         }
 
         @Override
@@ -680,6 +552,9 @@ public class JpaTest {
     }
 
     @Entity
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class QualifiedFieldThing {
         @Column
         private int id;
@@ -687,55 +562,6 @@ public class JpaTest {
         @Reversed
         @Column
         private String name;
-
-        public QualifiedFieldThing() {}
-
-        public QualifiedFieldThing(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            QualifiedFieldThing that = (QualifiedFieldThing) o;
-            return id == that.id
-                && Objects.equals(name, that.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, name);
-        }
-
-        @Override
-        public String toString() {
-            return "QualifiedFieldThing{"
-                + "id=" + id
-                + ", name='" + name + '\''
-                + '}';
-        }
     }
 
     @Test
@@ -769,61 +595,22 @@ public class JpaTest {
     }
 
     @Entity
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class QualifiedGetterThing {
         private int id;
-
         private String name;
-
-        public QualifiedGetterThing() {}
-
-        public QualifiedGetterThing(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
 
         @Column
         public int getId() {
             return id;
         }
 
-        public void setId(int id) {
-            this.id = id;
-        }
-
         @Reversed
         @Column
         public String getName() {
             return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            QualifiedGetterThing that = (QualifiedGetterThing) o;
-            return id == that.id
-                && Objects.equals(name, that.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, name);
-        }
-
-        @Override
-        public String toString() {
-            return "QualifiedGetterThing{"
-                + "id=" + id
-                + ", name='" + name + '\''
-                + '}';
         }
     }
 
@@ -858,61 +645,22 @@ public class JpaTest {
     }
 
     @Entity
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class QualifiedSetterThing {
         private int id;
-
         private String name;
-
-        public QualifiedSetterThing() {}
-
-        public QualifiedSetterThing(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public int getId() {
-            return id;
-        }
 
         @Column
         public void setId(int id) {
             this.id = id;
         }
 
-        public String getName() {
-            return name;
-        }
-
         @Reversed
         @Column
         public void setName(String name) {
             this.name = name;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            QualifiedSetterThing that = (QualifiedSetterThing) o;
-            return id == that.id
-                && Objects.equals(name, that.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, name);
-        }
-
-        @Override
-        public String toString() {
-            return "QualifiedSetterThing{"
-                + "id=" + id
-                + ", name='" + name + '\''
-                + '}';
         }
     }
 
@@ -947,69 +695,25 @@ public class JpaTest {
     }
 
     @Entity
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class QualifiedSetterParamThing {
         private int id;
-
         private String name;
-
-        public QualifiedSetterParamThing() {}
-
-        public QualifiedSetterParamThing(int id, String name) {
-            this.id = id;
-            this.name = name;
-        }
-
-        public int getId() {
-            return id;
-        }
 
         @Column
         public void setId(int id) {
             this.id = id;
         }
 
-        public String getName() {
-            return name;
-        }
-
         @Column
         public void setName(@Reversed String name) {
             this.name = name;
         }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) {
-                return true;
-            }
-            if (o == null || getClass() != o.getClass()) {
-                return false;
-            }
-            QualifiedSetterParamThing that = (QualifiedSetterParamThing) o;
-            return id == that.id
-                && Objects.equals(name, that.name);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(id, name);
-        }
-
-        @Override
-        public String toString() {
-            return "QualifiedSetterParamThing{"
-                + "id=" + id
-                + ", name='" + name + '\''
-                + '}';
-        }
     }
 
     private static <T extends Thing> AbstractListAssert<?, ? extends List<? extends T>, T, ?> assertThatThing(List<T> rs) {
-        return assertThat(rs).usingElementComparator((Comparator<T>) (left, right) -> {
-            if (left.getId() == right.getId()) {
-                return Objects.toString(left.getName(), "").compareTo(Objects.toString(right.getName(), ""));
-            }
-            return left.getId() < right.getId() ? -1 : 1;
-        });
+        return assertThat(rs).usingElementComparator(Comparator.comparing(Thing::getId).thenComparing(thing -> Objects.toString(thing.getName(), "")));
     }
 }

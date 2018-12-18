@@ -13,8 +13,6 @@
  */
 package org.jdbi.v3.sqlobject.config;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.rule.H2DatabaseRule;
@@ -23,6 +21,8 @@ import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestRegisterColumnMapperFactory {
     @Rule
@@ -45,8 +45,8 @@ public class TestRegisterColumnMapperFactory {
         assertThat(dao.listStringValues()).containsExactly(StringValue.of("foo"), StringValue.of("bar"));
         assertThat(dao.listLongValues()).containsExactly(LongValue.of(1L), LongValue.of(2L));
         assertThat(dao.list()).containsExactly(
-                new ValueTypeEntity(StringValue.of("foo"), LongValue.of(1L)),
-                new ValueTypeEntity(StringValue.of("bar"), LongValue.of(2L)));
+                ValueTypeEntity.of(StringValue.of("foo"), LongValue.of(1L)),
+                ValueTypeEntity.of(StringValue.of("bar"), LongValue.of(2L)));
     }
 
     public interface TestDao {

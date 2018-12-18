@@ -16,6 +16,9 @@ package org.jdbi.v3.core.argument;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Something;
 import org.jdbi.v3.core.rule.H2DatabaseRule;
@@ -114,16 +117,10 @@ public class TestNamedParams {
             .isEqualTo(thing);
     }
 
+    @RequiredArgsConstructor
+    @Getter
     public static class NestsSomething {
         private final Something nested;
-
-        NestsSomething(Something nested) {
-            this.nested = nested;
-        }
-
-        public Something getNested() {
-            return nested;
-        }
     }
 
     @Test
@@ -186,15 +183,10 @@ public class TestNamedParams {
         }
     }
 
+    @AllArgsConstructor
     public static class PublicFields {
         public int id = 0;
         public String name = "Keith";
-
-        public PublicFields(int id, String name) {
-
-            this.id = id;
-            this.name = name;
-        }
     }
 
     @Test
@@ -248,14 +240,10 @@ public class TestNamedParams {
             .isEqualTo(new Something(0, "Keith"));
     }
 
+    @AllArgsConstructor
     public static class NoArgFunctions {
         private final int i;
         private final String s;
-
-        public NoArgFunctions(int i, String s) {
-            this.i = i;
-            this.s = s;
-        }
 
         public int id() {
             return i;

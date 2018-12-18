@@ -13,10 +13,9 @@
  */
 package org.jdbi.v3.sqlobject;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 import java.sql.Types;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.Something;
 import org.jdbi.v3.core.ValueType;
@@ -33,6 +32,9 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class TestBindBean {
     @Rule
@@ -98,22 +100,11 @@ public class TestBindBean {
                 .containsExactly(1, ValueType.valueOf("foo"));
     }
 
+    @AllArgsConstructor
+    @Getter
     public static class Bean {
         private int id;
         private ValueType valueType;
-
-        public Bean(int id, ValueType valueType) {
-            this.id = id;
-            this.valueType = valueType;
-        }
-
-        public int getId() {
-            return id;
-        }
-
-        public ValueType getValueType() {
-            return valueType;
-        }
     }
 
     public static class ValueTypeArgumentFactory extends AbstractArgumentFactory<ValueType> {

@@ -13,6 +13,12 @@
  */
 package org.jdbi.v3.sqlobject;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.mapper.reflect.FieldMapper;
 import org.jdbi.v3.core.rule.H2DatabaseRule;
@@ -24,11 +30,6 @@ import org.jdbi.v3.sqlobject.statement.SqlUpdate;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -78,22 +79,13 @@ public class TestBindMethodsList {
         String getBazById(@Bind("id") int id);
     }
 
+    @AllArgsConstructor
     public static class Thing {
+        @Getter
         private int id;
         private String fooTest;
         private String barTest;
         private String bazTest;
-
-        public Thing(int id, String fooTest, String barTest, String bazTest) {
-            this.id = id;
-            this.fooTest = fooTest;
-            this.barTest = barTest;
-            this.bazTest = bazTest;
-        }
-
-        public int getId() {
-            return id;
-        }
 
         public String getFoo() {
             return fooTest;

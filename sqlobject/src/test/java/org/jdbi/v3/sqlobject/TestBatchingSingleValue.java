@@ -13,23 +13,24 @@
  */
 package org.jdbi.v3.sqlobject;
 
-import static java.util.Arrays.stream;
-import static org.assertj.core.api.Assertions.assertThat;
-
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
-
-import org.jdbi.v3.core.rule.H2DatabaseRule;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.h2.H2DatabasePlugin;
-import org.jdbi.v3.sqlobject.statement.BatchChunkSize;
+import org.jdbi.v3.core.rule.H2DatabaseRule;
 import org.jdbi.v3.sqlobject.config.RegisterConstructorMapper;
+import org.jdbi.v3.sqlobject.statement.BatchChunkSize;
 import org.jdbi.v3.sqlobject.statement.SqlBatch;
 import org.jdbi.v3.sqlobject.statement.SqlQuery;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import static java.util.Arrays.stream;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestBatchingSingleValue {
     @Rule
@@ -67,32 +68,11 @@ public class TestBatchingSingleValue {
         List<BatchingRow> select();
     }
 
+    @RequiredArgsConstructor
+    @EqualsAndHashCode
+    @ToString
     public static class BatchingRow {
         final int id;
         final int[] values;
-
-        public BatchingRow(int id, int[] values) {
-            this.id = id;
-            this.values = values;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj instanceof BatchingRow) {
-                BatchingRow other = (BatchingRow) obj;
-                return id == other.id && Arrays.equals(values, other.values);
-            }
-            return false;
-        }
-
-        @Override
-        public int hashCode() {
-            return id ^ Arrays.hashCode(values);
-        }
-
-        @Override
-        public String toString() {
-            return String.format("%s %s", id, Arrays.toString(values));
-        }
     }
 }
