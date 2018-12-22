@@ -42,6 +42,7 @@
     </licenses>
 
     <modules>
+        <module>benchmark</module>
         <module>core</module>
         <module>sqlobject</module>
         <module>stringtemplate4</module>
