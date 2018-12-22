@@ -41,7 +41,9 @@ public class BuiltInArgumentFactory implements ArgumentFactory {
         new InternetArgumentFactory(),
         new SqlTimeArgumentFactory(),
         new JavaTimeArgumentFactory(),
-        new EnumArgumentFactory(),
+        new EnumUnqualifiedArgumentFactory(),
+        new EnumByNameArgumentFactory(),
+        new EnumByOrdinalArgumentFactory(),
         new OptionalArgumentFactory(),
         new UntypedNullArgumentFactory()
     );
