@@ -29,6 +29,8 @@ public class EnumConfig implements JdbiConfig<EnumConfig> {
 
     /**
      * Applies to both binding and mapping.
+     *
+     * @return true if enums are handled by name, false if enums are handled by ordinal
      */
     public boolean isEnumHandledByName() {
         return handleEnumsByName;
@@ -36,23 +38,11 @@ public class EnumConfig implements JdbiConfig<EnumConfig> {
 
     /**
      * Applies to both binding and mapping.
-     */
-    public boolean isEnumHandledByOrdinal() {
-        return !handleEnumsByName;
-    }
-
-    /**
-     * Applies to both binding and mapping.
+     *
+     * @param byName true if enums should be handled by name, false if enums should be handled by ordinal
      */
     public void setEnumHandledByName(boolean byName) {
         this.handleEnumsByName = byName;
-    }
-
-    /**
-     * Applies to both binding and mapping.
-     */
-    public void setEnumHandledByOrdinal(boolean byOrdinal) {
-        this.handleEnumsByName = !byOrdinal;
     }
 
     @Override
