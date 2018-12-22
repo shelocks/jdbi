@@ -13,9 +13,6 @@
  */
 package org.jdbi.v3.core.qualifier;
 
-import static java.util.Collections.emptySet;
-import static java.util.stream.Collectors.toList;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.util.Arrays;
@@ -29,6 +26,9 @@ import java.util.function.Function;
 import org.jdbi.v3.core.generic.GenericType;
 import org.jdbi.v3.core.internal.AnnotationFactory;
 import org.jdbi.v3.meta.Beta;
+
+import static java.util.Collections.emptySet;
+import static java.util.stream.Collectors.toList;
 
 /**
  * A {@link java.lang.reflect.Type} qualified by a set of qualifier objects. Two qualified types are equal to each other
@@ -75,7 +75,8 @@ public final class QualifiedType {
      * @param qualifiers the qualifiers for the new qualified type.
      * @throws IllegalArgumentException if any of the given qualifier types have annotation attributes.
      */
-    public QualifiedType with(Class<? extends Annotation>... qualifiers) {
+    @SafeVarargs
+    public final QualifiedType with(Class<? extends Annotation>... qualifiers) {
         return with(Arrays.stream(qualifiers).map(AnnotationFactory::create).collect(toList()));
     }
 
