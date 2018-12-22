@@ -15,6 +15,7 @@ package org.jdbi.v3.core.mapper;
 
 import java.util.List;
 import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.result.UnableToProduceResultException;
 import org.jdbi.v3.core.rule.H2DatabaseRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -82,7 +83,7 @@ public class TestEnums {
 
         assertThatThrownBy(() -> h.createQuery("select * from something order by id")
             .mapToBean(SomethingElse.class)
-            .findFirst()).isInstanceOf(IllegalArgumentException.class);
+            .findFirst()).isInstanceOf(UnableToProduceResultException.class);
     }
 
     @Test
