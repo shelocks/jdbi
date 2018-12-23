@@ -14,7 +14,8 @@
 package org.jdbi.v3.core;
 
 import org.jdbi.v3.core.result.UnableToProduceResultException;
-import org.jdbi.v3.core.rule.H2DatabaseRule;
+import org.jdbi.v3.core.rule.DatabaseRule;
+import org.jdbi.v3.core.rule.SqliteDatabaseRule;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -23,76 +24,82 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class EnumConfigTest {
     @Rule
-    public H2DatabaseRule dbRule = new H2DatabaseRule();
+    public DatabaseRule db = new SqliteDatabaseRule();
 
     @Test
     public void byNameIsDefault() {
-        assertThat(dbRule.getJdbi().getConfig(EnumConfig.class).isEnumHandledByName()).isTrue();
+        assertThat(db.getJdbi().getConfig(EnumConfig.class).isEnumHandledByName()).isTrue();
     }
 
     @Test
     public void namesAreBoundCorrectly() {
-        Handle h = dbRule.openHandle();
+        db.getJdbi().useHandle(h -> {
+            h.createUpdate("create table enums(id int, name varchar)").execute();
 
-        h.createUpdate("insert into something (id, name) values (1, :name)")
-            .bind("name", Foobar.FOO)
-            .execute();
+            h.createUpdate("insert into enums (id, name) values (1, :name)")
+                .bind("name", Foobar.FOO)
+                .execute();
 
-        String ordinal = h.createQuery("select name from something")
-            .mapTo(String.class)
-            .findOnly();
+            String ordinal = h.createQuery("select name from enums")
+                .mapTo(String.class)
+                .findOnly();
 
-        assertThat(ordinal)
-            .isEqualTo(Foobar.FOO.name());
+            assertThat(ordinal)
+                .isEqualTo(Foobar.FOO.name());
+        });
     }
 
     @Test
     public void namesAreMappedCorrectly() {
-        Handle h = dbRule.openHandle();
+        db.getJdbi().useHandle(h -> {
+            Foobar name = h.createQuery("select :name")
+                .bind("name", Foobar.FOO.name())
+                .mapTo(Foobar.class)
+                .findOnly();
 
-        Foobar name = h.createQuery("select :name")
-            .bind("name", Foobar.FOO.name())
-            .mapTo(Foobar.class)
-            .findOnly();
-
-        assertThat(name)
-            .isEqualTo(Foobar.FOO);
+            assertThat(name)
+                .isEqualTo(Foobar.FOO);
+        });
     }
 
     @Test
     public void ordinalsAreBoundCorrectly() {
-        Handle h = dbRule.openHandle();
-        h.getConfig(EnumConfig.class).setEnumHandledByName(false);
+        db.getJdbi().useHandle(h -> {
+            h.getConfig(EnumConfig.class).setEnumHandledByName(false);
 
-        h.createUpdate("insert into something (id, intValue) values (1, :ordinal)")
-            .bind("ordinal", Foobar.FOO)
-            .execute();
+            h.createUpdate("create table enums(id int, ordinal int)").execute();
 
-        Integer ordinal = h.createQuery("select intValue from something")
-            .mapTo(Integer.class)
-            .findOnly();
+            h.createUpdate("insert into enums (id, ordinal) values (1, :ordinal)")
+                .bind("ordinal", Foobar.FOO)
+                .execute();
 
-        assertThat(ordinal)
-            .isEqualTo(Foobar.FOO.ordinal());
+            Integer ordinal = h.createQuery("select ordinal from enums")
+                .mapTo(Integer.class)
+                .findOnly();
+
+            assertThat(ordinal)
+                .isEqualTo(Foobar.FOO.ordinal());
+        });
     }
 
     @Test
     public void ordinalsAreMappedCorrectly() {
-        Handle h = dbRule.openHandle();
-        h.getConfig(EnumConfig.class).setEnumHandledByName(false);
+        db.getJdbi().useHandle(h -> {
+            h.getConfig(EnumConfig.class).setEnumHandledByName(false);
 
-        Foobar name = h.createQuery("select :ordinal")
-            .bind("ordinal", Foobar.FOO.ordinal())
-            .mapTo(Foobar.class)
-            .findOnly();
+            Foobar name = h.createQuery("select :ordinal")
+                .bind("ordinal", Foobar.FOO.ordinal())
+                .mapTo(Foobar.class)
+                .findOnly();
 
-        assertThat(name)
-            .isEqualTo(Foobar.FOO);
+            assertThat(name)
+                .isEqualTo(Foobar.FOO);
+        });
     }
 
     @Test
     public void badNameThrows() {
-        dbRule.getJdbi().useHandle(h -> {
+        db.getJdbi().useHandle(h -> {
             assertThatThrownBy(h.createQuery("select 'xxx'").mapTo(Foobar.class)::findOnly)
                 .isInstanceOf(UnableToProduceResultException.class)
                 .hasMessageContaining("no Foobar value could be matched to the name xxx");
@@ -101,7 +108,7 @@ public class EnumConfigTest {
 
     @Test
     public void badOrdinalThrows() {
-        dbRule.getJdbi().useHandle(h -> {
+        db.getJdbi().useHandle(h -> {
             h.getConfig(EnumConfig.class).setEnumHandledByName(false);
 
             assertThatThrownBy(h.createQuery("select 2").mapTo(Foobar.class)::findOnly)
@@ -112,7 +119,7 @@ public class EnumConfigTest {
 
     @Test
     public void testNull() {
-        dbRule.getJdbi().useHandle(h -> {
+        db.getJdbi().useHandle(h -> {
             h.createUpdate("create table enums(value varchar)").execute();
 
             h.createUpdate("insert into enums(value) values(:enum)")
@@ -131,8 +138,8 @@ public class EnumConfigTest {
         });
     }
 
-    // bar is unused to make sure we don't have any coincidental correctness from only having a single value otherwise
+    // bar is unused to make sure we don't have any coincidental correctness
     private enum Foobar {
-        FOO, BAR
+        BAR, FOO
     }
 }

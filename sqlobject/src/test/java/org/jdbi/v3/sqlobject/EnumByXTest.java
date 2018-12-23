@@ -24,11 +24,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class EnumByXTest {
     @Rule
-    public JdbiRule dbRule = JdbiRule.h2().withPlugin(new SqlObjectPlugin());
+    public JdbiRule db = JdbiRule.sqlite().withPlugin(new SqlObjectPlugin());
 
     @Test
     public void annotationOverridesDefaultInBindingAndMapping() {
-        dbRule.getJdbi().useHandle(h -> {
+        db.getJdbi().useHandle(h -> {
             h.createUpdate("create table enums(ordinal int)").execute();
 
             FooDao dao = h.attach(FooDao.class);

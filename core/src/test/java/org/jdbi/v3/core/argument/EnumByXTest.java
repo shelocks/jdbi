@@ -16,9 +16,9 @@ package org.jdbi.v3.core.argument;
 import org.jdbi.v3.core.EnumByName;
 import org.jdbi.v3.core.EnumByOrdinal;
 import org.jdbi.v3.core.EnumConfig;
-import org.jdbi.v3.core.Handle;
 import org.jdbi.v3.core.qualifier.QualifiedType;
-import org.jdbi.v3.core.rule.H2DatabaseRule;
+import org.jdbi.v3.core.rule.DatabaseRule;
+import org.jdbi.v3.core.rule.SqliteDatabaseRule;
 import org.junit.Rule;
 import org.junit.Test;
 
@@ -26,64 +26,122 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class EnumByXTest {
     @Rule
-    public H2DatabaseRule dbRule = new H2DatabaseRule();
+    public DatabaseRule db = new SqliteDatabaseRule();
 
     @Test
     public void methodCallCanBeAnnotatedAsByName() {
-        Handle h = dbRule.openHandle();
-        h.getConfig(EnumConfig.class).setEnumHandledByName(false);
+        db.getJdbi().useHandle(h -> {
+            h.getConfig(EnumConfig.class).setEnumHandledByName(false);
 
-        h.createUpdate("insert into something (id, name) values (1, :name)")
-            .bindByType("name", Foobar.FOO, QualifiedType.of(Foobar.class).with(EnumByName.class))
-            .execute();
+            h.createUpdate("create table enums(id int, name varchar)").execute();
 
-        String name = h.createQuery("select name from something")
-            .mapTo(String.class)
-            .findOnly();
-        assertThat(name).isEqualTo(Foobar.FOO.name());
+            h.createUpdate("insert into enums (id, name) values (1, :name)")
+                .bindByType("name", Foobar.FOO, QualifiedType.of(Foobar.class).with(EnumByName.class))
+                .execute();
 
-        Object byName = h.createQuery("select name from something")
-            .mapTo(QualifiedType.of(Foobar.class).with(EnumByName.class))
-            .findOnly();
-
-        assertThat(byName)
-            .isEqualTo(Foobar.FOO);
+            String inserted = h.createQuery("select name from enums")
+                .mapTo(String.class)
+                .findOnly();
+            assertThat(inserted).isEqualTo(Foobar.FOO.name());
+        });
     }
 
     @Test
     public void methodCallCanBeAnnotatedAsByOrdinal() {
-        Handle h = dbRule.openHandle();
-        h.getConfig(EnumConfig.class).setEnumHandledByName(false);
+        db.getJdbi().useHandle(h -> {
+            h.createUpdate("create table enums(id int, ordinal int)").execute();
 
-        h.createUpdate("insert into something (id, intValue) values (1, :ordinal)")
-            .bind("ordinal", Foobar.FOO.ordinal())
-            .execute();
+            h.createUpdate("insert into enums (id, ordinal) values (1, :ordinal)")
+                .bindByType("ordinal", Foobar.FOO, QualifiedType.of(Foobar.class).with(EnumByOrdinal.class))
+                .execute();
 
-        Integer name = h.createQuery("select intValue from something")
-            .mapTo(Integer.class)
-            .findOnly();
-        assertThat(name).isEqualTo(Foobar.FOO.ordinal());
-
-        Object byOrdinal = h.createQuery("select intValue from something")
-            .mapTo(QualifiedType.of(Foobar.class).with(EnumByOrdinal.class))
-            .findOnly();
-
-        assertThat(byOrdinal)
-            .isEqualTo(Foobar.FOO);
+            Integer inserted = h.createQuery("select ordinal from enums")
+                .mapTo(Integer.class)
+                .findOnly();
+            assertThat(inserted).isEqualTo(Foobar.FOO.ordinal());
+        });
     }
 
-    // bar is unused to make sure we don't have any coincidental correctness from only having a single value otherwise
+    @Test
+    public void enumCanBeAnnotatedAsByName() {
+        db.getJdbi().useHandle(h -> {
+            h.getConfig(EnumConfig.class).setEnumHandledByName(false);
+
+            h.createUpdate("create table enums(id int, name varchar)").execute();
+
+            h.createUpdate("insert into enums(id, name) values(1, :name)")
+                .bind("name", ByName.ALPHABETIC)
+                .execute();
+
+            String inserted = h.createQuery("select name from enums")
+                .mapTo(String.class)
+                .findOnly();
+            assertThat(inserted).isEqualTo(ByName.ALPHABETIC.name());
+        });
+    }
+
+    @Test
+    public void enumCanBeAnnotatedAsByOrdinal() {
+        db.getJdbi().useHandle(h -> {
+            h.createUpdate("create table enums(id int, ordinal int)").execute();
+
+            h.createUpdate("insert into enums(id, ordinal) values(1, :ordinal)")
+                .bind("ordinal", ByOrdinal.NUMERIC)
+                .execute();
+
+            Integer inserted = h.createQuery("select ordinal from enums")
+                .mapTo(Integer.class)
+                .findOnly();
+            assertThat(inserted).isEqualTo(ByOrdinal.NUMERIC.ordinal());
+        });
+    }
+
+    @Test
+    public void methodCallOverridesClassForName() {
+        db.getJdbi().useHandle(h -> {
+            h.getConfig(EnumConfig.class).setEnumHandledByName(false);
+
+            h.createUpdate("create table enums(id int, name varchar)").execute();
+
+            h.createUpdate("insert into enums(id, name) values(1, :name)")
+                .bindByType("name", ByOrdinal.NUMERIC, QualifiedType.of(ByOrdinal.class).with(EnumByName.class))
+                .execute();
+
+            String inserted = h.createQuery("select name from enums")
+                .mapTo(String.class)
+                .findOnly();
+            assertThat(inserted).isEqualTo(ByOrdinal.NUMERIC.name());
+        });
+    }
+
+    @Test
+    public void methodCallOverridesClassForOrdinal() {
+        db.getJdbi().useHandle(h -> {
+            h.createUpdate("create table enums(id int, ordinal int)").execute();
+
+            h.createUpdate("insert into enums(id, ordinal) values(1, :ordinal)")
+                .bindByType("ordinal", ByName.ALPHABETIC, QualifiedType.of(ByName.class).with(EnumByOrdinal.class))
+                .execute();
+
+            Integer inserted = h.createQuery("select ordinal from enums")
+                .mapTo(Integer.class)
+                .findOnly();
+            assertThat(inserted).isEqualTo(ByName.ALPHABETIC.ordinal());
+        });
+    }
+
+    // bar is unused to make sure we don't have any coincidental correctness
     private enum Foobar {
-        FOO, BAR
+        BAR, FOO
     }
 
     @EnumByName
     private enum ByName {
-        ALPHABETIC
+        BAR, ALPHABETIC
     }
 
     @EnumByOrdinal
     private enum ByOrdinal {
-        NUMERIC
+        BAR, NUMERIC
     }
 }
