@@ -11,19 +11,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jdbi.v3.core.argument.internal;
+package org.jdbi.v3.testing;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Set;
-import org.jdbi.v3.core.qualifier.QualifiedType;
+import org.junit.Rule;
+import org.junit.Test;
 
-public class TypedValue {
-    final QualifiedType type;
-    final Object value;
+import static org.assertj.core.api.Assertions.assertThat;
 
-    public TypedValue(Type type, Set<Annotation> qualifiers, Object value) {
-        this.type = QualifiedType.of(type).with(qualifiers);
-        this.value = value;
+public class JdbiRuleH2Test {
+    @Rule
+    public JdbiRule h2 = JdbiRule.h2();
+
+    @Test
+    public void isAlive() {
+        Integer one = h2.getJdbi().withHandle(h -> h.createQuery("select 1").mapTo(Integer.class).findOnly());
+
+        assertThat(one).isEqualTo(1);
     }
 }

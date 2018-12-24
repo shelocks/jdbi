@@ -11,19 +11,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jdbi.v3.core.argument.internal;
+package org.jdbi.v3.testing;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Set;
-import org.jdbi.v3.core.qualifier.QualifiedType;
+import javax.sql.DataSource;
+import org.sqlite.SQLiteDataSource;
 
-public class TypedValue {
-    final QualifiedType type;
-    final Object value;
-
-    public TypedValue(Type type, Set<Annotation> qualifiers, Object value) {
-        this.type = QualifiedType.of(type).with(qualifiers);
-        this.value = value;
+class EmbeddedSqliteJdbiRule extends JdbiRule {
+    @Override
+    protected DataSource createDataSource() {
+        return new SQLiteDataSource();
     }
 }
