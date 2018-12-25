@@ -1,0 +1,17 @@
+org.skife.jdbi.rewriter.colon
+org.skife.jdbi.rewriter.hash
+org.skife.jdbi.rewriter.printf
+org.skife.jdbi.v2
+org.skife.jdbi.v2.exceptions
+org.skife.jdbi.v2.logging
+org.skife.jdbi.v2.spring
+org.skife.jdbi.v2.sqlobject
+org.skife.jdbi.v2.sqlobject.customizers
+org.skife.jdbi.v2.sqlobject.helpers
+org.skife.jdbi.v2.sqlobject.mixins
+org.skife.jdbi.v2.sqlobject.stringtemplate
+org.skife.jdbi.v2.tweak
+org.skife.jdbi.v2.tweak.transactions
+org.skife.jdbi.v2.unstable
+org.skife.jdbi.v2.unstable.oracle
+org.skife.jdbi.v2.util
